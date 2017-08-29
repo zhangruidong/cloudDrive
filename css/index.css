@@ -1,0 +1,496 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  background-color: #6ea7b2;
+  overflow: hidden;
+}
+#app {
+  width: 1200px;
+  height: 600px;
+  background-color: #f6f7fb;
+  margin: 12px auto 50px;
+  border-radius: 8px;
+  position: relative;
+}
+header {
+  height: 70px;
+  position: relative;
+}
+header img {
+  width: 45px;
+  height: 34px;
+  position: absolute;
+  left: 28px;
+  top: 18px;
+}
+header .logoName {
+  position: absolute;
+  font: 18px/30px "微软雅黑";
+  color: #309fd6;
+  left: 88px;
+  top: 20px;
+}
+header .user {
+  position: absolute;
+  right: 107px;
+  top: 20px;
+  width: 32px;
+  height: 32px;
+  background: url("../img/head.png") no-repeat;
+  background-size: cover;
+}
+header .more {
+  position: absolute;
+  right: 71px;
+  top: 25px;
+  width: 26px;
+  height: 22px;
+  background: url("../img/downArr.png") 0 10px no-repeat;
+  background-size: 11px 6px;
+  border-right: 1px solid #e4e5e7;
+  cursor: pointer;
+}
+header .more:hover {
+  background: url("../img/downarr_hover.png") 0 10px no-repeat;
+}
+header .set {
+  position: absolute;
+  right: 40px;
+  top: 28px;
+  width: 16px;
+  height: 16px;
+  background: url("../img/conf.png") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+header .set:hover {
+  background: url("../img/conf_hover.png") no-repeat;
+}
+#tool {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  background-color: #ecf1f7;
+  border-top: 1px solid #d1d9db;
+  border-bottom: 1px solid #d1d9db;
+  padding: 10px 0 10px 20px;
+}
+#tool div {
+  float: left;
+  margin-right: 10px;
+  border-radius: 4px;
+  border: 1px solid #d1d9db;
+  height: 38px;
+  box-sizing: border-box;
+  padding: 0px 25px 0 55px;
+  font: 14px/36px "微软雅黑";
+  color: #818f9a;
+  background-size: 16px 14px;
+  cursor: pointer;
+}
+#tool div:nth-of-type(1) {
+  background: url("../img/downLoad.png") 21px 11px no-repeat;
+}
+#tool div:nth-of-type(1):hover {
+  background: url("../img/downLoad_hover.png") 21px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div:nth-of-type(2) {
+  background: url("../img/share.png") 21px 11px no-repeat;
+}
+#tool div:nth-of-type(2):hover {
+  background: url("../img/share_hover.png") 21px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div:nth-of-type(3) {
+  background: url("../img/moveTo.png") 21px 11px no-repeat;
+}
+#tool div:nth-of-type(3):hover {
+  background: url("../img/moveTo_hover.png") 21px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div:nth-of-type(4) {
+  background: url("../img/rename.png") 21px 11px no-repeat;
+}
+#tool div:nth-of-type(4):hover {
+  background: url("../img/rename_hover.png") 21px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div:nth-of-type(5) {
+  background: url("../img/delete.png") 21px 11px no-repeat;
+}
+#tool div:nth-of-type(5):hover {
+  background: url("../img/delete_hover.png") 21px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div:nth-of-type(6) {
+  background: url("../img/creatNew.png") 21px 11px no-repeat;
+}
+#tool div:nth-of-type(6):hover {
+  background: url("../img/creatNew_hover.png") 21px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div:nth-of-type(7) {
+  background: url("../img/refresh.png") 11px 11px no-repeat;
+  padding-left: 26px;
+  padding-right: 15px;
+}
+#tool div:nth-of-type(7):hover {
+  background: url("../img/refresh_hover.png") 11px 11px no-repeat;
+  color: #3ca1cf;
+}
+#tool div.rightIcon {
+  margin-left: 212px;
+  background: url("../img/rightIcon.png") 11px 11px no-repeat;
+  padding: 0;
+  width: 38px;
+}
+#tool div.rightIcon:hover {
+  background: url("../img/rightIcon_hover.png") 11px 11px no-repeat;
+}
+#tool div.sort {
+  background: url("../img/rightIcon2.png") 11px 11px no-repeat;
+  background-size: 34px 14px;
+  padding: 0;
+  width: 56px;
+  background-color: #ffffff;
+}
+#tool ul {
+  display: none;
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid #52addc;
+  border-radius: 4px;
+  border-top-right-radius: 0;
+  top: 57px;
+  right: 21px;
+  width: 132px;
+  z-index: 10;
+}
+#tool ul li {
+  height: 36px;
+  padding-left: 40px;
+  font: 14px/36px "微软雅黑";
+  background-color: #fff;
+  color: #8f989f;
+  background-size: 16px 16px;
+}
+#tool ul li:nth-of-type(1) {
+  background: url("../img/time.png") 10px 10px no-repeat;
+  background-color: #fff;
+}
+#tool ul li:nth-of-type(1):hover {
+  background-color: #e1e8ee;
+}
+#tool ul li:nth-of-type(2) {
+  background: url("../img/latter.png") 10px 10px no-repeat;
+  background-color: #fff;
+}
+#tool ul li:nth-of-type(2):hover {
+  background-color: #e1e8ee;
+}
+#tool ul li:nth-of-type(3) {
+  background: url("../img/small.png") 10px 10px no-repeat;
+  background-color: #fff;
+}
+#tool ul li:nth-of-type(3):hover {
+  background-color: #e1e8ee;
+}
+#tool div.sort.active {
+  height: 49px;
+  border-bottom: none;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 100;
+  position: relative;
+  border-color: #52addc;
+}
+content {
+  height: 470px;
+  width: 1200px;
+}
+#tree {
+  background-color: #fff;
+  float: left;
+  width: 260px;
+  height: 470px;
+  box-sizing: border-box;
+  border-right: 2px solid #e2e7eb;
+}
+#tree h2 {
+  position: relative;
+  color: #6a757b;
+  font: 16px / 36px "微软雅黑";
+}
+#tree h2 small {
+  display: inline-block;
+  min-width: 60px;
+  height: 36px;
+  color: #6a757b;
+  font: 16px / 36px "微软雅黑";
+  cursor: pointer;
+}
+#tree h2 span:nth-of-type(1) {
+  position: absolute;
+  left: -10px;
+  top: 4px;
+  width: 30px;
+  height: 30px;
+  background-position: 10px 10px;
+  cursor: pointer;
+}
+#tree h2 span:nth-of-type(2) {
+  position: absolute;
+  left: 20px;
+  top: 11px;
+  width: 16px;
+  height: 16px;
+}
+#tree h2 .triangleR {
+  background: url("../img/rightArricon.png") no-repeat;
+}
+#tree h2 .triangleD {
+  background: url("../img/downArricon.png") no-repeat;
+}
+#tree h2 .fileIcon {
+  background: url("../img/fileIcon.png") no-repeat;
+}
+#tree h2 .fileIcon:hover {
+  background: url("../img/fileIcon0.png") no-repeat;
+}
+#tree h2:hover {
+  background-color: #e1e8ee;
+}
+.right {
+  float: left;
+}
+#nav {
+  height: 50px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #e2e7ea;
+  width: 940px;
+  position: relative;
+  padding-left: 60px;
+  background-color: #ffffff;
+}
+#nav input {
+  width: 17px;
+  height: 17px;
+  background-color: #fffeff;
+  position: absolute;
+  left: 15px ;
+  top: 12px;
+}
+#nav div.directory {
+  position: relative;
+  float: left;
+  height: 50px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #e2e7ea;
+  padding: 0 16px;
+  margin-right: 32px;
+  font: 14px/48px "微软雅黑";
+  cursor: pointer;
+}
+#nav div.directory:last-of-type {
+  border-bottom: 2px solid #55addd;
+}
+#nav div.directory:after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  top: 0;
+  width: 32px;
+  height: 48px;
+  background: url("../img/arrowR.png") 8px 19px no-repeat;
+  background-size: 6px 10px;
+}
+#nav div.directory:last-of-type:after {
+  display: none;
+}
+#file {
+  width: 940px;
+  height: 420px;
+  box-sizing: border-box;
+  background-color: #f6f7fb;
+}
+#file .no-content {
+  display: none;
+  width: 940px;
+  height: 420px;
+  background: url("../img/emptybg.png") center no-repeat;
+  background-size: 210px 209px;
+}
+#file .files {
+  display: block;
+  width: 940px;
+  height: 420px;
+  box-sizing: border-box;
+  padding: 40px 0 0 40px;
+  overflow: auto;
+}
+#file .files .file {
+  position: relative;
+  float: left;
+  width: 180px;
+  height: 180px;
+  margin: 0 40px 40px 0;
+  background: #ebeff0 url("../img/file.png") 50px 35px no-repeat;
+}
+#file .files .file input {
+  display: none;
+  position: absolute;
+  left: 30px;
+  top: 122px;
+  text-indent: 10px;
+  border: 1px solid #56adda;
+  border-radius: 4px;
+  width: 118px;
+  height: 30px;
+  font: 14px/30px "微软雅黑";
+}
+#file .files .file p {
+  margin-top: 122px;
+  text-align: center;
+  font: 14px/32px "微软雅黑";
+}
+#file .min-files {
+  display: none;
+  width: 940px;
+  height: 420px;
+  box-sizing: border-box;
+}
+#file .min-files li {
+  position: relative;
+  box-sizing: border-box;
+  height: 51px;
+  border-bottom: 1px solid #e2e7eb;
+  background-color: #fff;
+  padding-left: 15px;
+  font: 14px/50px "微软雅黑";
+  color: #6e757b;
+}
+#file .min-files li input {
+  float: left;
+  width: 17px;
+  height: 17px;
+  background-color: #fffeff;
+  position: absolute;
+  left: 15px ;
+  top: 12px;
+}
+#file .min-files li p {
+  margin-left: 53px;
+  padding-left: 34px;
+  float: left;
+  background: url("../img/fileSmall.png") 0 14px no-repeat;
+}
+#file .min-files li span {
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-top: 18px;
+  margin-right: 20px;
+  background-size: 16px 16px;
+  cursor: pointer;
+}
+#file .min-files li span:nth-of-type(1) {
+  margin-left: 204px;
+  background: url("../img/downLoad.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(2) {
+  background: url("../img/share.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(3) {
+  background: url("../img/moveTo.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(4) {
+  background: url("../img/rename.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(5) {
+  background: url("../img/delete.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(1):hover {
+  background: url("../img/downLoad_hover.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(2):hover {
+  background: url("../img/share_hover.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(3):hover {
+  background: url("../img/moveTo_hover.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(4):hover {
+  background: url("../img/rename_hover.png") no-repeat;
+}
+#file .min-files li span:nth-of-type(5):hover {
+  background: url("../img/delete_hover.png") no-repeat;
+}
+#file .min-files li:hover {
+  background-color: #f6f7fb;
+}
+.mask {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
+.mask .modal {
+  width: 320px;
+  height: 180px;
+  margin: 310px auto;
+  box-sizing: border-box;
+  border: 2px solid #53addf;
+  border-radius: 6px;
+  background-color: #fff;
+  position: relative;
+}
+.mask .modal .close {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  right: 15px;
+  top: 15px;
+  background: url("../img/close.png") no-repeat;
+  cursor: pointer;
+}
+.mask .modal .modal-body {
+  color: #010101;
+  margin-left: 35px;
+  margin-top: 33px;
+  padding-left: 54px;
+  background: url("../img/q.png") 0 8px no-repeat;
+}
+.mask .modal .modal-body h2 {
+  font: 16px/32px "微软雅黑";
+}
+.mask .modal .modal-body p {
+  font: 12px/26px "微软雅黑";
+}
+.mask .modal input {
+  width: 80px;
+  height: 30px;
+  box-sizing: border-box;
+  border: 1px solid #55addb;
+  background: #ffffff;
+  border-radius: 4px;
+  color: #55addb;
+  position: absolute;
+  bottom: 27px;
+}
+.mask .modal input:hover {
+  background: #55addb;
+  color: #fff;
+}
+.mask .modal input.btnL {
+  left: 70px;
+}
+.mask .modal input.btnR {
+  right: 62px;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>zrd</title>
+    <link rel="icon" href="img/cloud.ico">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <img src="img/cloud.png" alt="logo">
+            <span class="logoName">MV云盘</span>
+            <span class="user"></span>
+            <span class="more"></span>
+            <span class="set"></span>
+        </header>
+        <div id="tool">
+            <div>下载</div>
+            <div>分享</div>
+            <div>移动到</div>
+            <div>重命名</div>
+            <div>删除</div>
+            <div>新建文件夹</div>
+            <div class="refresh"></div>
+            <div class="rightIcon"></div>
+            <div class="sort"></div>
+            <ul>
+                <li>按时间顺序</li>
+                <li>按字母顺序</li>
+                <li>显示缩略图</li>
+            </ul>
+        </div>
+        <content>
+            <ul id="tree">
+                <!--<li>
+                    <h2><span class="triangleD"></span><span class="fileIcon"></span>微云</h2>
+                    <ul>
+                        <li>
+                            <h2><span class="triangleD"></span><span class="fileIcon"></span>JS课程</h2>
+                            <ul>
+                                <li>
+                                    <h2><span class="triangleD"></span><span class="fileIcon"></span>111</h2>
+                                </li>
+                                <li>
+                                    <h2><span class="triangleD"></span><span class="fileIcon"></span>222</h2>
+                                </li>
+                                <li>
+                                    <h2><span class="triangleD"></span><span class="fileIcon"></span>333</h2>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h2><span class="triangleD"></span><span class="fileIcon"></span>CSS课程</h2>
+                        </li>
+                        <li>
+                            <h2><span class="triangleD"></span><span class="fileIcon"></span>HTML课程</h2>
+                        </li>
+                    </ul>
+                </li>-->
+            </ul>
+            <div class="right">
+                <div id="nav">
+                    <!--<input type="checkbox">
+                    <div class="directory">微云</div>
+                    <div class="directory">JS课程</div>
+                    <div class="directory">111</div>-->
+                </div>
+                <div id="file">
+                    <!--没有内容-->
+                    <div class="no-content"></div>
+                    <!---->
+
+                    <!--文件夹-->
+                    <ul class="files">
+                        <!--<li class="file">
+                            <p>CSS课程</p>
+                            <input type="text" value="js">
+                        </li>
+                        <li class="file">
+                            <p>CSS课程</p>
+                            <input type="text" value="js">
+                        </li>
+                        <li class="file">
+                            <p>CSS课程</p>
+                            <input type="text" value="js">
+                        </li>
+                        <li class="file">
+                            <p>CSS课程</p>
+                            <input type="text" value="js">
+                        </li>-->
+                    </ul>
+                    <!---->
+
+                    <!--缩略文件-->
+                    <ul class="min-files">
+                        <li>
+                            <input type="checkbox">
+                            <p>JS基础课程</p>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </li>
+                        <li>
+                            <input type="checkbox">
+                            <p>JS基础课程</p>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </li>
+                        <li>
+                            <input type="checkbox">
+                            <p>JS基础课程</p>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </li>
+                    </ul>
+                    <!---->
+
+                </div>
+            </div>
+        </content>
+        <div class="mask">
+            <div class="modal">
+                <span class="close"></span>
+                <div class="modal-body">
+                    <h2>确定删除这个文件吗？</h2>
+                    <p>已删除的文件可以在回收站找到</p>
+                </div>
+                <input type="button" value="确定" class="btnL">
+                <input type="button" value="取消" class="btnR">
+            </div>
+        </div>
+
+    </div>
+    <script src="js/data.js"></script>
+    <script src="js/handle.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
