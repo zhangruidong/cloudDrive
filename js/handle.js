@@ -144,6 +144,9 @@ var handle = {
             lis[i].addEventListener("dblclick",function () {
                 var d=handle.getByPid(Number(this.getAttribute("data-id")));
                 handle.showFile(d);
+                var id=this.getAttribute("data-id")
+                var breadData=handle.getBreadArr(id);
+                handle.breadcrumb(breadData);
             })
         }
     },
