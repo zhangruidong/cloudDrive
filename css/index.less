@@ -148,7 +148,7 @@ header {
     padding:0;
     width:38px;
   }
-  div.rightIcon:hover{
+  div.rightIcon.active{
     background: url("../img/rightIcon_hover.png") 11px 11px no-repeat;
   }
   div.sort {
@@ -236,36 +236,45 @@ content {
       font: 16px /36px "微软雅黑";
       cursor: pointer;
     }
-    span:nth-of-type(1) {
+    span {
       position: absolute;
-      left: -10px;
-      top: 4px;
+      left: 10px;
+      top: 12px;
       width:30px;
       height: 30px;
       background-position: 10px 10px;
       cursor: pointer;
     }
-    span:nth-of-type(2) {
+    /*span:nth-of-type(2) {
       position: absolute;
-      left: 20px;
+      left: 10px;
       top: 11px;
       width:16px;
       height: 16px;
-    }
+    }*/
     .triangleR {
+      top:3px;
       background: url("../img/rightArricon.png") no-repeat;
+      background-position: 10px 10px;
     }
     .triangleD {
+      top:3px;
       background: url("../img/downArricon.png") no-repeat;
+      background-position: 10px 10px;
     }
     .fileIcon {
-      background: url("../img/fileIcon.png") no-repeat;
-    }
-    .fileIcon:hover {
+      position: absolute;
+      top: 10px;
       background: url("../img/fileIcon0.png") no-repeat;
+    }
+    .fileIcon.open {
+      background: url("../img/fileIcon.png") no-repeat;
     }
   }
   h2:hover {
+    background-color: #f0f4f7;
+  }
+  h2.active {
     background-color: #e1e8ee;
   }
 }
@@ -329,7 +338,7 @@ content {
     background-size: 210px 209px;
   }
   .files {
-    display: block;
+    display: none;
     width:940px;
     height: 420px;
     box-sizing: border-box;
@@ -341,7 +350,7 @@ content {
       width:180px;
       height: 180px;
       margin: 0 40px 40px 0;
-      background:#ebeff0 url("../img/file.png") 50px 35px no-repeat;
+      background:#f0f4f7 url("../img/file.png") 50px 35px no-repeat;
       input {
         display: none;
         position: absolute;
@@ -360,6 +369,9 @@ content {
         font: 14px/32px "微软雅黑";
       }
     }
+  }
+  .file.active{
+    background-color: #e1e8ee;
   }
   .min-files{
     display: none;
@@ -385,10 +397,15 @@ content {
         top:12px;
       }
       p {
+        min-width: 200px;
         margin-left: 53px;
         padding-left: 34px;
         float: left;
         background: url("../img/fileSmall.png") 0 14px no-repeat;
+      }
+      time {
+        float: right;
+        margin-right: 20px
       }
       span {
         float: left;
