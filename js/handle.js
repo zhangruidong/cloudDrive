@@ -30,6 +30,21 @@ var handle = {
         num=num<10?"0"+num:num
       return   num;
     },
+    removeSelf:function (me,arr) {
+      return arr.filter(function (item) {
+          if(item.getAttribute("data-id")!=me.getAttribute("data-id")){
+              return true;
+          }
+      })
+    },
+    checkName:function(id, newName, pid){
+        var tempData = handle.getByPid(pid).filter(function(item){
+            return item.id != id;
+        });//筛除自己
+        return tempData.some(function(item){
+            return item.name == newName;
+        })
+    },
     /**
      *通过pid生成HTML(ul下的li)
      * @param pid
@@ -82,9 +97,9 @@ var handle = {
             smalls[i].addEventListener("click",function () {
                 this.id=this.getAttribute("data-id");
                 var d=handle.getByPid(Number(this.id))
-                handle.showFile(d);
-                var breadData=handle.getBreadArr(this.id);
-                handle.breadcrumb(breadData);
+                handle.state.nowPid=Number(this.id) ;
+                handle.showFile();
+                handle.breadcrumb();
             })
         }
         for(var i=0;i<h2s.length;i++){
@@ -123,7 +138,6 @@ var handle = {
                         }
                         this.classList.remove("triangleD");
                         this.classList.add("triangleR");
-                        //todo open
                     }
                 }
             })
@@ -137,7 +151,8 @@ var handle = {
         document.querySelector("#tree").innerHTML = handle.formHtmlByPid(0,62);
         handle.treeAddEvent();
     },
-    showFile:function (arr) { // 展示文件夹的内容    arr为需要展示文件的数组
+    showFile:function () { // 展示文件夹的内容    arr为需要展示文件的数组
+        var arr=handle.getByPid(handle.state.nowPid);
         var file=document.getElementById("file");
         var files=file.querySelector(".files");
         var minFiles=file.querySelector(".min-files");
@@ -206,51 +221,75 @@ var handle = {
     fnClick:function (e,lis) {
         e.stopPropagation();
         var inp=this.querySelector("input");
-        if(this.classList.contains("active") && getComputedStyle(inp)["display"]=="none"){
-            inp.style.display="block"
-            inp.select()
-            inp.onclick=function (e) {
-                e.cancelBubble=true;
+        var p=this.querySelector("p");
+        var selLi=Array.from(lis).filter(function (item) {
+            if(item.classList.contains("active")){
+                return true;
             }
-            inp.onblur=function () {
-                var id=Number(this.parentNode.getAttribute("data-id"));
-                var item=handle.getById(id);
-                //todo  click事件需要优化处理
-                for (var i = 0; i < data.length; i++) {
-                    if(data[i].name==item.name){
-                        data[i].name=this.value;
-                    }
-                };
+        })
+        if(e.ctrlKey){
+            this.classList.toggle("active");
+        }else{
+            if(e.target.nodeName.toLocaleLowerCase()=="li" || selLi.length>1){
+                // todo ?????????
+                handle.removeSelf(this,Array.from(lis)).forEach(function (item) {
+                    item.classList.remove("active");
+                })
+                this.classList.toggle("active");
+            }else if(e.target.nodeName.toLocaleLowerCase()=="p" && this.classList.contains("active") && selLi.length==1){
+                inp.style.display="block";
+                inp.select();
+            }else if(e.target.nodeName.toLocaleLowerCase()=="p" && !this.classList.contains("active")){
+                handle.removeSelf(this,Array.from(lis)).forEach(function (item) {
+                    item.classList.remove("active");
+                })
+                this.classList.toggle("active");
+            }
+        }
+        inp.onblur=reName;
+        inp.onkeydown=function (e) {
+            if(e.keyCode==13){
+                reName.call(this);
+            }
+        };
+        function reName() {
+            var newName=this.value;
+            var id=Number(this.parentNode.getAttribute("data-id"));
+            var pid=handle.getById(id).pid;
+            if(handle.checkName(id,newName,pid)){ // 重名
+                var mask=document.querySelector(".mask");
+                var alert=mask.querySelector(".alert");
+                alert.querySelector("h2").innerHTML="此文件名已存在！";
+                mask.style.display="block";
+                alert.style.display="block";
+                var btnR=alert.querySelector("input");
+                var close=alert.querySelector(".close");
+                btnR.onclick=fnClose;
+                close.onclick=fnClose;
+                function fnClose() {
+                    inp.value=p.innerHTML;
+                    mask.style.display="none";
+                    alert.style.display="none";
+                    inp.style.display="none";
+                }
+            }else { // 没有重名
+                inp.style.display="none";
+                p.innerHTML=this.value;
+                handle.getById(id).name=this.value;
                 handle.creatTree();
-                // item.name=this.vlaue;
-                this.previousElementSibling.innerHTML=this.value;
-                setTimeout(function () {
-                    this.style.display="none";
-                }.bind(this),120)
+                handle.openTree();
             }
-            for (var i = 0; i < lis.length; i++) {
-                lis[i].classList.remove("active");
-            }
-            this.classList.add("active")
-            return
-        }else if(this.classList.contains("active") && getComputedStyle(inp)["display"]=="block"){
-            for (var i = 0; i < lis.length; i++) {
-                lis[i].classList.remove("active");
-            }
-            this.classList.add("active")
-            return
         }
-        for (var i = 0; i < lis.length; i++) {
-            lis[i].classList.remove("active");
-        }
-        this.classList.toggle("active")
     },
     fnDblclick:function () {
-        var d=handle.getByPid(Number(this.getAttribute("data-id")));
-        handle.showFile(d);
-        var id=this.getAttribute("data-id");
-        var breadData=handle.getBreadArr(id);
-        handle.breadcrumb(breadData);
+        var pid=Number(this.getAttribute("data-id"));
+        handle.state.nowPid=pid;
+        var d=handle.getByPid(pid);
+        handle.showFile();
+        handle.breadcrumb();
+        handle.creatTree();
+        handle.openTree();
+        // todo dbl
     },
     getParent:function (arr) {
         var item=arr[0];
@@ -269,7 +308,8 @@ var handle = {
         handle.getParent(arr);
         return arr;
     },
-    breadcrumb:function (arr) {
+    breadcrumb:function () {
+        var arr=handle.getBreadArr(handle.state.nowPid);
         var nav=document.getElementById("nav");
         var str=`
             <input type="checkbox">
@@ -283,28 +323,41 @@ var handle = {
         var divs=nav.querySelectorAll("div");
         for(var i=0;i<divs.length;i++){
             divs[i].addEventListener("click",function () {
-                var id=this.getAttribute("data-id")
-                var d=handle.getByPid(Number(id))
-                handle.showFile(d);
-                var breadData=handle.getBreadArr(id);
-                handle.breadcrumb(breadData);
+                var pid=Number(this.getAttribute("data-id"));
+                handle.state.nowPid=pid;
+                var d=handle.getByPid(pid)
+                handle.showFile();
+                handle.breadcrumb();
                 handle.creatTree();
-                handle.openTree(id);
+                handle.openTree();
             })
         }
     },
-    openTree:function (id) {
-        // todo 文件树同步打开
+    openTree:function () {
+        var pid=handle.state.nowPid
         var tree=document.getElementById("tree");
-        var small=tree.querySelector("small[data-id='"+id+"']")
-        /*ul.style.display="block";
-        fileIcon.classList.add("open");
-        this.classList.remove("triangleR");
-        this.classList.add("triangleD");*/
-        var h2=small.parentNode;
-        var ul=h2.nextElementSibling;
-        small.querySelector(".fileIcon").classList.add("open");
-        console.log(ul)
+        var small=tree.querySelector("small[data-id='"+pid+"']")
+        var arr=[handle.getById(pid)];
+        handle.getParent(arr);
+        var smalls=[];
+        arr.forEach(function (item) {
+            var small=tree.querySelector("small[data-id='"+item.id+"']");
+            smalls.push(small);
+        })
+        for(var i=0;i<smalls.length;i++){
+            var h2=smalls[i].parentNode;
+            var ul=h2.nextElementSibling;
+            if(ul!=null){
+                var triangle=h2.querySelector("span");
+                var fileIcon=smalls[i].querySelector(".fileIcon");
+
+                //todo doing
+                fileIcon.classList.add("open");
+                triangle.classList.remove("triangleR");
+                triangle.classList.add("triangleD");
+                ul.style.display="block";
+            }
+        }
     },
     newFile:function () {
         var file=document.querySelector("#file");
@@ -313,7 +366,6 @@ var handle = {
             var files=file.querySelector(".files");
             var id=data[data.length-1].id+1;
             var name="新建文件夹";
-            // todo end
             var li=document.createElement("li");
             li.setAttribute("data-id",id);
             li.className="file active";
