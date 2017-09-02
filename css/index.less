@@ -352,6 +352,7 @@ content {
     width:940px;
     height: 420px;
     box-sizing: border-box;
+    border:2px solid transparent;
     padding:40px 0 0 40px;
     overflow: auto;
     .file {
@@ -359,8 +360,9 @@ content {
       float: left;
       width:180px;
       height: 180px;
-      margin: 0 40px 40px 0;
+      margin: 0 36px 36px 0;
       background:#f0f4f7 url("../img/file.png") 50px 35px no-repeat;
+      box-sizing: border-box;
       input {
         display: none;
         position: absolute;
@@ -383,6 +385,9 @@ content {
   .file.active{
     background-color: #e1e8ee;
   }
+  .into{
+    border:2px solid #55addd !important;
+  }
   .min-files{
     display: none;
     width:940px;
@@ -392,6 +397,7 @@ content {
       position: relative;
       box-sizing: border-box;
       height: 51px;
+      border:1px solid transparent;
       border-bottom: 1px solid #e2e7eb;
       background-color: #fff;
       padding-left: 15px;
@@ -459,7 +465,7 @@ content {
       }
     }
     li:hover {
-      background-color: #f6f7fb;
+      background-color: rgba(225,232,238,0.7);
     }
   }
 }
@@ -605,5 +611,25 @@ content {
     }
   }
 }
-
+.badge{
+  position: absolute;
+  left: 0;
+  top:0;
+  width:80px;
+  height: 71px;
+  opacity: 0.5;
+  box-sizing: border-box;
+  background: url("../img/file.png") no-repeat;
+  div {
+    width: 30px;
+    height: 26px;
+    background-color: #55aeda;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 6px;
+    margin: 24px auto;
+    font: 18px/26px "微软雅黑";
+    text-align: center;
+  }
+}
 

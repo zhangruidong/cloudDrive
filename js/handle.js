@@ -188,6 +188,7 @@ var handle = {
                 for(var i=0;i<arr.length;i++){
                     str+=`
                         <li data-id="${arr[i].id}" class="file">
+                            <input type="checkbox">
                             <p>${arr[i].name}</p>
                             <span></span>
                             <span></span>
@@ -199,20 +200,166 @@ var handle = {
                 `
                 }
                 minFiles.innerHTML=str;
-                var lis=file.getElementsByTagName("li");
+                var lis=minFiles.getElementsByTagName("li");
                 handle.filesAddEvent(lis);
             };
         }
     },
     filesAddEvent:function (lis) { //添加事件  lis需要添加事件的元素的集合
         // todo 添加事件
-        document.addEventListener("click",function (e) {
-            if(e.target==lis[0].parentNode){
+        document.onmousedown=function (e) {
+            var box=lis[0].parentNode;
+            var file=document.querySelector("#file");
+            if(e.target==box){
+                filePos=file.getBoundingClientRect();
                 for (var i = 0; i < lis.length; i++) {
                     lis[i].classList.remove("active");
                 }
+                var rect=document.createElement("div");
+                rect.className="rect";
+                var ori={
+                    x:e.clientX,
+                    y:e.clientY
+                }
+                document.onmousemove=function (e) {
+                    file.appendChild(rect);
+                    var x,y;
+                    if(e.clientX>filePos.right){
+                        x=filePos.right;
+                    }else if(e.clientX<filePos.left){
+                        x=filePos.left;
+                    }else{
+                        x=e.clientX;
+                    }
+                    if(e.clientY>filePos.bottom){
+                        y=filePos.bottom;
+                    }else if(e.clientY<filePos.top){
+                        y=filePos.top;
+                    }else{
+                        y=e.clientY;
+                    }
+                    rect.style.cssText= `width:${Math.abs(x-ori.x)}px;height:${Math.abs(y-ori.y)}px;left:${Math.min(x,ori.x)-filePos.left}px;top:${Math.min(y,ori.y)-filePos.top}px`;
+                    /*碰撞检测*/
+                    Array.from(lis).forEach(function (item) {
+                        var rectPos = rect.getBoundingClientRect();
+                        var itemPos = item.getBoundingClientRect();
+                        if( rectPos.right < itemPos.left || rectPos.left > itemPos.right || rectPos.bottom < itemPos.top || rectPos.top > itemPos.bottom ){
+                            item.classList.remove( "active" );
+                        }else{
+                            item.classList.add( "active" );
+                        }
+                    })
+                    return false;
+                };
+                document.onmouseup=function (e) {
+                    var rect=file.querySelector(".rect");
+                    if(rect){
+                        file.removeChild(rect);
+                    }
+                    document.onmousemove=document.onmouseup=null;
+                }
+            }else if(e.target.classList.contains("active") || e.target.parentNode.classList.contains("active")){
+                var selLi=box.querySelectorAll(".active");
+                var noselLi=box.querySelectorAll(".file:not(.active)");
+                var fileRect=file.getBoundingClientRect();
+                var bodyRect=document.body.getBoundingClientRect();
+                console.log("移动徽章");
+                var badge=document.createElement("div");
+                badge.className="badge";
+                var div=document.createElement("div");
+                div.innerHTML=selLi.length;
+                badge.appendChild(div);
+                document.onmousemove=function (e) {
+                    document.body.appendChild(badge);
+                    var l=e.clientX-40;
+                    var t=e.clientY-50;
+                    if(l<bodyRect.left){
+                        l=bodyRect.left
+                    }else if(l>bodyRect.right-80){
+                        l=bodyRect.right-80
+                    }
+                    if(t<bodyRect.top){
+                        t=bodyRect.top;
+                    }else if(t>bodyRect.bottom-81){
+                        t=bodyRect.bottom-81;
+                    }
+                    badge.style.left=l+"px";
+                    badge.style.top=t+"px";
+                    noselLi.forEach(function (item) {
+                        var pos = item.getBoundingClientRect();
+                        if( e.clientX < pos.right && e.clientX > pos.left && e.clientY > pos.top && e.clientY < pos.bottom ){
+                            item.classList.add("into");
+                        }else{
+                            item.classList.remove("into");
+                        }
+                    })
+                    return false;
+                };
+                document.onmouseup=function () {
+                    var target=file.querySelector(".into");
+                    var badge=document.querySelector(".badge");
+                    if(target){
+                        target.classList.remove("into");
+                        var targetId=Number(target.getAttribute("data-id"));
+                        var targetName=handle.getByPid(targetId).map(function (item) {
+                            return item.name;
+                        });
+                        var selName=Array.from(selLi).map(function (item) {
+                            return item.querySelector("p").innerHTML;
+                        })
+                        var oldArr=targetName.concat(selName);
+                        var newArr=[...new Set(oldArr)];
+                        if(oldArr.length==newArr.length){
+                            console.log("移动")
+                            Array.from(selLi).map(function (item) {
+                                return handle.getById(Number(item.getAttribute("data-id"))).pid=targetId;
+                            });
+                            var mask=document.querySelector(".mask");
+                            var loading=mask.querySelector(".loading");
+                            var h2=loading.querySelector("h2");
+                            h2.innerHTML="正在移动0/"+selLi.length;
+                            mask.style.display="block";
+                            loading.style.display="block";
+                            var now=0;
+                            var timer=0;
+                            timer=setInterval(function () {
+                                now++;
+                                if(now>selLi.length){
+                                    clearInterval(timer);
+                                    mask.style.display="none";
+                                    loading.style.display="none";
+                                }
+                                h2.innerHTML="正在移动"+now+"/"+selLi.length;
+                            },200)
+                            handle.creatTree();
+                            handle.openTree();
+                            handle.showFile();
+                            handle.breadcrumb();
+                        }else{
+                            var mask=document.querySelector(".mask");
+                            var alert=mask.querySelector(".alert");
+                            var h2=alert.querySelector("h2");
+                            var input=alert.querySelector("input");
+                            var close=alert.querySelector(".close");
+                            h2.innerHTML="存在重名文件";
+                            mask.style.display="block";
+                            alert.style.display="block";
+                            input.onclick=fnClose;
+                            close.onclick=fnClose;
+                            function fnClose() {
+                                mask.style.display="none";
+                                alert.style.display="none";
+                            }
+                        }
+
+                    }
+                    if(badge){
+                        document.body.removeChild(badge);
+                    }
+                    document.onmousemove=document.onmouseup=null;
+                }
             }
-        })
+        }
         for (var i = 0; i < lis.length; i++) {
             lis[i].addEventListener("click",function (e) {
                 handle.fnClick.call(this,e,lis)
@@ -233,7 +380,6 @@ var handle = {
             this.classList.toggle("active");
         }else{
             if(e.target.nodeName.toLocaleLowerCase()=="li" || selLi.length>1){
-                // todo ?????????
                 handle.removeSelf(this,Array.from(lis)).forEach(function (item) {
                     item.classList.remove("active");
                 })
@@ -473,19 +619,6 @@ var handle = {
     /*region:function () {
         var file=document.querySelector("#file");
         filePos=file.getBoundingClientRect();
-        document.onclick=function (e) {
-            if(handle.state.size){ // 大图标
-                var box=file.querySelector(".files");
-            }else { // 小图标
-                var box=file.querySelector(".min-files")
-            }
-            if(e.target==box){
-                lis=box.querySelectorAll("li")
-                for (var i = 0; i < lis.length; i++) {
-                    lis[i].classList.remove("active");
-                }
-            }
-        }
         file.onmousedown=function (e) {
             if(e.target==file.querySelector(".no-content")){
                 return;
