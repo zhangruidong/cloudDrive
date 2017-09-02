@@ -1,5 +1,5 @@
 /**  by zhangruidong   **/
-var data = [//存储所有文件夹\文件\图片
+var data = [ // 存储所有文件夹\文件\图片
     {
         "id":1,
         "name":"微云",

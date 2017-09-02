@@ -330,6 +330,16 @@ content {
   height: 420px;
   box-sizing: border-box;
   background-color: #f6f7fb;
+  position: relative;
+  .rect {
+    width:0px;
+    height: 0px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    border:2px dashed #56acdd;
+  }
   .no-content {
     display: none;
     width:940px;
@@ -568,6 +578,30 @@ content {
     }
     input.btnR{
       right: 62px;
+    }
+  }
+  .loading{
+    display: none;
+    width:230px;
+    height: 80px;
+    margin: 280px auto;
+    box-sizing: border-box;
+    border:2px solid #53addf;
+    border-radius: 6px;
+    background-color: #fff;
+    position: relative;
+    img {
+      position: absolute;
+      width:35px;
+      height: 35px;
+      left: 30px;
+      top:20px;
+    }
+    h2 {
+      font: 16px/40px "微软雅黑";
+      position: absolute;
+      left: 80px;
+      top:18px;
     }
   }
 }

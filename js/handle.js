@@ -157,18 +157,12 @@ var handle = {
         var files=file.querySelector(".files");
         var minFiles=file.querySelector(".min-files");
         var noFile=file.querySelector(".no-content");
-        files.addEventListener("click",function () {
-            var lis=files.querySelectorAll("li");
-            for (var i = 0; i < lis.length; i++) {
-                lis[i].classList.remove("active");
-            }
-        })
         if(arr.length==0){
             noFile.style.display="block";
             files.style.display="none";
             minFiles.style.display="none";
         }else{
-            if(handle.state.size){
+            if(handle.state.size){ //大图标
                 //todo 通过开关显示不同的文件类型
                 noFile.style.display="none";
                 files.style.display="block";
@@ -207,10 +201,18 @@ var handle = {
                 minFiles.innerHTML=str;
                 var lis=file.getElementsByTagName("li");
                 handle.filesAddEvent(lis);
-            }
+            };
         }
     },
     filesAddEvent:function (lis) { //添加事件  lis需要添加事件的元素的集合
+        // todo 添加事件
+        document.addEventListener("click",function (e) {
+            if(e.target==lis[0].parentNode){
+                for (var i = 0; i < lis.length; i++) {
+                    lis[i].classList.remove("active");
+                }
+            }
+        })
         for (var i = 0; i < lis.length; i++) {
             lis[i].addEventListener("click",function (e) {
                 handle.fnClick.call(this,e,lis)
@@ -246,42 +248,19 @@ var handle = {
                 this.classList.toggle("active");
             }
         }
-        inp.onblur=reName;
+        inp.onblur=function () {
+            handle.reName(this.parentNode);
+        }
         inp.onkeydown=function (e) {
             if(e.keyCode==13){
-                reName.call(this);
+                handle.reName(this.parentNode);
             }
         };
-        function reName() {
-            var newName=this.value;
-            var id=Number(this.parentNode.getAttribute("data-id"));
-            var pid=handle.getById(id).pid;
-            if(handle.checkName(id,newName,pid)){ // 重名
-                var mask=document.querySelector(".mask");
-                var alert=mask.querySelector(".alert");
-                alert.querySelector("h2").innerHTML="此文件名已存在！";
-                mask.style.display="block";
-                alert.style.display="block";
-                var btnR=alert.querySelector("input");
-                var close=alert.querySelector(".close");
-                btnR.onclick=fnClose;
-                close.onclick=fnClose;
-                function fnClose() {
-                    inp.value=p.innerHTML;
-                    mask.style.display="none";
-                    alert.style.display="none";
-                    inp.style.display="none";
-                }
-            }else { // 没有重名
-                inp.style.display="none";
-                p.innerHTML=this.value;
-                handle.getById(id).name=this.value;
-                handle.creatTree();
-                handle.openTree();
-            }
-        }
     },
-    fnDblclick:function () {
+    fnDblclick:function (e) {
+        if(e.target.nodeName.toLowerCase()=="input"){
+            return;
+        }
         var pid=Number(this.getAttribute("data-id"));
         handle.state.nowPid=pid;
         var d=handle.getByPid(pid);
@@ -290,6 +269,37 @@ var handle = {
         handle.creatTree();
         handle.openTree();
         // todo dbl
+    },
+    reName:function (li) {
+        var inp=li.querySelector("input");
+        var p=li.querySelector("p");
+        var newName=inp.value;
+        var id=Number(li.getAttribute("data-id"));
+        var pid=handle.getById(id).pid;
+        if(handle.checkName(id,newName,pid)){ // 重名
+            var mask=document.querySelector(".mask");
+            var alert=mask.querySelector(".alert");
+            alert.querySelector("h2").innerHTML="此文件名已存在！";
+            mask.style.display="block";
+            alert.style.display="block";
+            var btnR=alert.querySelector("input");
+            var close=alert.querySelector(".close");
+            btnR.onclick=fnClose;
+            close.onclick=fnClose;
+            function fnClose() {
+                mask.style.display="none";
+                alert.style.display="none";
+                /*inp.value=p.innerHTML;
+                inp.style.display="none";*/
+                inp.select();
+            }
+        }else { // 没有重名
+            inp.style.display="none";
+            p.innerHTML=inp.value;
+            handle.getById(id).name=inp.value;
+            handle.creatTree();
+            handle.openTree();
+        }
     },
     getParent:function (arr) {
         var item=arr[0];
@@ -350,8 +360,6 @@ var handle = {
             if(ul!=null){
                 var triangle=h2.querySelector("span");
                 var fileIcon=smalls[i].querySelector(".fileIcon");
-
-                //todo doing
                 fileIcon.classList.add("open");
                 triangle.classList.remove("triangleR");
                 triangle.classList.add("triangleD");
@@ -360,39 +368,184 @@ var handle = {
         }
     },
     newFile:function () {
-        var file=document.querySelector("#file");
-        var pid=file.dataId;
-        if(handle.state.size){ //大图标
-            var files=file.querySelector(".files");
-            var id=data[data.length-1].id+1;
-            var name="新建文件夹";
-            var li=document.createElement("li");
-            li.setAttribute("data-id",id);
-            li.className="file active";
-            li.innerHTML=`
-                            <p>${name}</p>
-                            <input type="text" value=${name}>
-                `;
-            files.appendChild(li);
-            var lis=files.querySelectorAll("li");
-            data.push({
-                "id":id,
-                "name":name,
-                "pid":pid,
-                "time":Date.now()
-            })
-            console.log(lis)
-            /*var inp=li.querySelector("input");
-            inp.style.display="block";
-            inp.select();*/
-            li.addEventListener("click",function (e) {
-                handle.fnClick.call(this,e,lis)
-            });
-            li.addEventListener("dblclick",handle.fnDblclick)
-
-        }else {
-            var minFiles=file.querySelector(".min-files");
-            console.log(minFiles)
+        handle.state.maxId++;
+        var tempData = {
+            "id":handle.state.maxId,
+            "name":"新建文件夹",
+            "pid":handle.state.nowPid,
+            "time":Date.now()
+        };
+        data.push(tempData);
+        handle.creatTree();
+        handle.openTree();
+        handle.showFile();
+        handle.breadcrumb();
+        var lis=document.querySelectorAll(".files li");
+        var newLi=lis[lis.length-1];
+        console.log(newLi);
+        var inp=newLi.querySelector("input");
+        inp.style.display="block";
+        inp.select();
+        inp.onblur=function () {
+            handle.reName(inp.parentNode);
         }
-    }
+    },
+    removeFile:function () {
+        var lis=document.querySelectorAll("#file .files li.active");
+        var mask=document.querySelector(".mask");
+        var alert=mask.querySelector(".alert");
+        var h2=alert.querySelector("h2");
+        var alert=mask.querySelector(".alert");
+        if(lis.length==0){
+            h2.innerHTML="请选择要删除的文件！";
+            mask.style.display="block";
+            alert.style.display="block";
+            var btnR=alert.querySelector("input");
+            var close=alert.querySelector(".close");
+            btnR.onclick=fnClose;
+            close.onclick=fnClose;
+            function fnClose() {
+                mask.style.display="none";
+                alert.style.display="none";
+            }
+        }else{
+            var selArr=Array.from(lis).map(function (item) {
+                return Number(item.getAttribute("data-id"))
+            })
+            var children=handle.getChildren(selArr);
+            var removeArr=selArr.concat(children);
+            data=data.filter(function (item) {
+                return removeArr.indexOf(item.id)==-1;
+            })
+            var mask=document.querySelector(".mask");
+            var loading=mask.querySelector(".loading");
+            var h2=loading.querySelector("h2");
+            h2.innerHTML="正在删除0/"+removeArr.length;
+            mask.style.display="block";
+            loading.style.display="block";
+            var now=0;
+            var timer=0;
+            timer=setInterval(function () {
+                now++;
+                if(now>removeArr.length){
+                    clearInterval(timer);
+                    mask.style.display="none";
+                    loading.style.display="none";
+                }
+                h2.innerHTML="正在删除"+now+"/"+removeArr.length;
+            },200)
+
+            handle.creatTree();
+            handle.openTree();
+            handle.showFile();
+            handle.breadcrumb();
+        }
+
+    },
+    getChildren:function (parents) {
+        var children=[];
+        var nowArr=[];
+        parents.forEach(function (item) {
+            nowArr.push(item);
+        });
+        fn(nowArr);
+        function fn(nowArr) {
+            if(nowArr.length>0){
+                var arrTemp=[];
+                nowArr.forEach(function (item) {
+                    arrTemp=arrTemp.concat(handle.getByPid(item).map(function (item) {
+                        return item.id
+                    }));
+                    children=children.concat(handle.getByPid(item).map(function (item) {
+                        return item.id
+                    }));
+                })
+                nowArr=[];
+                arrTemp.forEach(function (item) {
+                    nowArr=nowArr.concat(item);
+                })
+                fn(nowArr);
+            }
+        }
+        return children;
+    },
+    // todo region
+    /*region:function () {
+        var file=document.querySelector("#file");
+        filePos=file.getBoundingClientRect();
+        document.onclick=function (e) {
+            if(handle.state.size){ // 大图标
+                var box=file.querySelector(".files");
+            }else { // 小图标
+                var box=file.querySelector(".min-files")
+            }
+            if(e.target==box){
+                lis=box.querySelectorAll("li")
+                for (var i = 0; i < lis.length; i++) {
+                    lis[i].classList.remove("active");
+                }
+            }
+        }
+        file.onmousedown=function (e) {
+            if(e.target==file.querySelector(".no-content")){
+                return;
+            }
+            var ori={
+                x:e.clientX,
+                y:e.clientY
+            };
+            if(handle.state.size){ // 大图标
+                var box=file.querySelector(".files");
+            }else { // 小图标
+                var box=file.querySelector(".min-files")
+            }
+            lis=box.querySelectorAll("li")
+            var rect=document.createElement("div");
+            rect.className="rect";
+            document.onmousemove=function (e) {
+                file.appendChild(rect);
+                var x,y;
+                if(e.clientX>filePos.right){
+                    x=filePos.right;
+                }else if(e.clientX<filePos.left){
+                    x=filePos.left;
+                }else{
+                    x=e.clientX;
+                }
+                if(e.clientY>filePos.bottom){
+                    y=filePos.bottom;
+                }else if(e.clientY<filePos.top){
+                    y=filePos.top;
+                }else{
+                    y=e.clientY;
+                }
+                e.clientX=e.clientX>filePos.right?filePos.right:e.clientX;
+                e.clientX=e.clientX<filePos.left?filePos.left:e.clientX;
+                rect.style.cssText= `width:${Math.abs(x-ori.x)}px;height:${Math.abs(y-ori.y)}px;left:${Math.min(x,ori.x)-filePos.left}px;top:${Math.min(y,ori.y)-filePos.top}px`;
+
+                /!*做碰撞检测*!/
+                lis.forEach(function (item) {
+                    var rectPos = rect.getBoundingClientRect();
+                    var itemPos = item.getBoundingClientRect();
+                    if( rectPos.right < itemPos.left || rectPos.left > itemPos.right || rectPos.bottom < itemPos.top || rectPos.top > itemPos.bottom ){
+                        item.classList.remove( "active" );
+                    }else{
+                        item.classList.add( "active" );
+                    }
+                    // todo doing
+                })
+                return false;
+            }
+            document.onmouseup=function () {
+                var rect=file.querySelector(".rect");
+                if(rect){
+                    file.removeChild(rect);
+                }
+                document.onmousemove=document.onmouseup=null;
+
+            }
+        };
+
+
+    }*/
 }

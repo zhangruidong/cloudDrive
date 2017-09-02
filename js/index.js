@@ -1,16 +1,24 @@
 /**  by zhangruidong   **/
 
+handle.state.nowPid=1;
 handle.creatTree();
+handle.openTree();
+handle.showFile();
+handle.breadcrumb();
 
 (function () {  // 文件 大小 图标显示
     var resize=document.querySelector("#tool .rightIcon");
     resize.onclick=function () {
         this.classList.toggle("active");
         if(this.classList.contains("active")){
-            handle.state.size=false;
+            handle.state.size=false;  //小图标
         }else {
-            handle.state.size=true;
+            handle.state.size=true;  //大图标
         }
+        handle.creatTree();
+        handle.openTree();
+        handle.showFile();
+        handle.breadcrumb();
     }
 })();
 (function () {
@@ -40,19 +48,31 @@ handle.creatTree();
         }
     }
 })();
-(function () {
+(function () { // 新建文件
     var newBtn=document.querySelector("#tool div:nth-of-type(6)");
     newBtn.onclick=handle.newFile;
 
 })();
 
+(function () { // 删除文件
+    var removeBtn=document.querySelector("#tool div:nth-of-type(5)");
+    removeBtn.onclick=handle.removeFile;
+
+})();
 /*
 * creatTree
 *openTree(handle.state.nowPid)
 * breadcrumb(handle.state.nowPid)
 * showFile(handle.state.nowPid)
 *
-* 重命名
+* 重命名  如果重名，获得焦点还是使用旧的名字     双击input 将没有效果
 * 新建
 * 删除
 * */
+
+(function () {
+    /*var mask=document.querySelector(".mask");
+    var loading=mask.querySelector(".loading");
+    mask.style.display="block";
+    loading.style.display="block";*/
+})();
