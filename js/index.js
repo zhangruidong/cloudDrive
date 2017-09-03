@@ -5,6 +5,12 @@ handle.creatTree();
 handle.openTree();
 handle.showFile();
 handle.breadcrumb();
+handle.sort();
+var arrr=["张","锐","东"];
+arrr.sort(function (a,b) {
+    return a.localeCompare(b);
+});
+console.log(arrr);
 
 (function () {  // 文件 大小 图标显示
     var resize=document.querySelector("#tool .rightIcon");
@@ -71,8 +77,30 @@ handle.breadcrumb();
 * */
 
 (function () {
-    /*var mask=document.querySelector(".mask");
-    var loading=mask.querySelector(".loading");
-    mask.style.display="block";
-    loading.style.display="block";*/
+    var tool=document.querySelector("#tool");
+    var sort=tool.querySelector(".sort");
+    var ul=tool.querySelector("ul");
+    var lis=ul.querySelectorAll("li");
+    sort.onmouseover=function () {
+        sort.classList.add("active");
+        ul.style.display="block";
+    };
+    sort.onmouseout=function () {
+        sort.classList.remove("active");
+        ul.style.display="none";
+    };
+    ul.onmouseover=function () {
+        sort.classList.add("active");
+        ul.style.display="block";
+    };
+    ul.onmouseout=function () {
+        sort.classList.remove("active");
+        ul.style.display="none";
+    };
+    lis.forEach(function (item) {
+        item.onclick=function () {
+            sort.classList.remove("active");
+            ul.style.display="none";
+        }
+    })
 })();

@@ -170,6 +170,7 @@ header .set:hover {
   right: 21px;
   width: 132px;
   z-index: 10;
+  cursor: pointer;
 }
 #tool ul li {
   height: 36px;
@@ -403,16 +404,17 @@ content {
   color: #6e757b;
 }
 #file .min-files li input {
-  float: left;
-  width: 17px;
-  height: 17px;
-  background-color: #fffeff;
   position: absolute;
-  left: 15px ;
-  top: 12px;
+  text-indent: 4px;
+  width: 120px;
+  height: 28px;
+  font: 14px/28px "微软雅黑";
+  left: 95px ;
+  top: 10px;
+  display: none;
 }
 #file .min-files li p {
-  min-width: 200px;
+  width: 200px;
   margin-left: 53px;
   padding-left: 34px;
   float: left;

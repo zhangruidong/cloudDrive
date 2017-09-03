@@ -3,7 +3,7 @@
 var handle = {
     state:{
         "size":true, //默认为大图标，就是true的状态
-        "sort":false, //默认状态不进行时间的排序
+        "sort":true, //默认状态进行字母的排序
         "nowPid":1, // 当前文件展示的父级id
         "maxId":data.length  // 当前最大的id
     },
@@ -188,7 +188,7 @@ var handle = {
                 for(var i=0;i<arr.length;i++){
                     str+=`
                         <li data-id="${arr[i].id}" class="file">
-                            <input type="checkbox">
+                            <input type="text" value=${arr[i].name}>
                             <p>${arr[i].name}</p>
                             <span></span>
                             <span></span>
@@ -263,7 +263,6 @@ var handle = {
                 var noselLi=box.querySelectorAll(".file:not(.active)");
                 var fileRect=file.getBoundingClientRect();
                 var bodyRect=document.body.getBoundingClientRect();
-                console.log("移动徽章");
                 var badge=document.createElement("div");
                 badge.className="badge";
                 var div=document.createElement("div");
@@ -310,7 +309,6 @@ var handle = {
                         var oldArr=targetName.concat(selName);
                         var newArr=[...new Set(oldArr)];
                         if(oldArr.length==newArr.length){
-                            console.log("移动")
                             Array.from(selLi).map(function (item) {
                                 return handle.getById(Number(item.getAttribute("data-id"))).pid=targetId;
                             });
@@ -414,7 +412,6 @@ var handle = {
         handle.breadcrumb();
         handle.creatTree();
         handle.openTree();
-        // todo dbl
     },
     reName:function (li) {
         var inp=li.querySelector("input");
@@ -468,7 +465,7 @@ var handle = {
         var arr=handle.getBreadArr(handle.state.nowPid);
         var nav=document.getElementById("nav");
         var str=`
-            <input type="checkbox">
+            <!--<input type="checkbox">-->
         `;
         for (var i = 0; i < arr.length; i++) {
             str+=`
@@ -526,9 +523,12 @@ var handle = {
         handle.openTree();
         handle.showFile();
         handle.breadcrumb();
-        var lis=document.querySelectorAll(".files li");
+        if(handle.state.size){ // 大图标
+            var lis=document.querySelectorAll(".files li");
+        }else{
+            var lis=document.querySelectorAll(".min-files li");
+        }
         var newLi=lis[lis.length-1];
-        console.log(newLi);
         var inp=newLi.querySelector("input");
         inp.style.display="block";
         inp.select();
@@ -537,7 +537,11 @@ var handle = {
         }
     },
     removeFile:function () {
-        var lis=document.querySelectorAll("#file .files li.active");
+        if(handle.state.size){
+            var lis=document.querySelectorAll("#file .files li.active");
+        }else{
+            var lis=document.querySelectorAll("#file .min-files li.active");
+        }
         var mask=document.querySelector(".mask");
         var alert=mask.querySelector(".alert");
         var h2=alert.querySelector("h2");
@@ -615,70 +619,11 @@ var handle = {
         }
         return children;
     },
-    // todo region
-    /*region:function () {
-        var file=document.querySelector("#file");
-        filePos=file.getBoundingClientRect();
-        file.onmousedown=function (e) {
-            if(e.target==file.querySelector(".no-content")){
-                return;
-            }
-            var ori={
-                x:e.clientX,
-                y:e.clientY
-            };
-            if(handle.state.size){ // 大图标
-                var box=file.querySelector(".files");
-            }else { // 小图标
-                var box=file.querySelector(".min-files")
-            }
-            lis=box.querySelectorAll("li")
-            var rect=document.createElement("div");
-            rect.className="rect";
-            document.onmousemove=function (e) {
-                file.appendChild(rect);
-                var x,y;
-                if(e.clientX>filePos.right){
-                    x=filePos.right;
-                }else if(e.clientX<filePos.left){
-                    x=filePos.left;
-                }else{
-                    x=e.clientX;
-                }
-                if(e.clientY>filePos.bottom){
-                    y=filePos.bottom;
-                }else if(e.clientY<filePos.top){
-                    y=filePos.top;
-                }else{
-                    y=e.clientY;
-                }
-                e.clientX=e.clientX>filePos.right?filePos.right:e.clientX;
-                e.clientX=e.clientX<filePos.left?filePos.left:e.clientX;
-                rect.style.cssText= `width:${Math.abs(x-ori.x)}px;height:${Math.abs(y-ori.y)}px;left:${Math.min(x,ori.x)-filePos.left}px;top:${Math.min(y,ori.y)-filePos.top}px`;
-
-                /!*做碰撞检测*!/
-                lis.forEach(function (item) {
-                    var rectPos = rect.getBoundingClientRect();
-                    var itemPos = item.getBoundingClientRect();
-                    if( rectPos.right < itemPos.left || rectPos.left > itemPos.right || rectPos.bottom < itemPos.top || rectPos.top > itemPos.bottom ){
-                        item.classList.remove( "active" );
-                    }else{
-                        item.classList.add( "active" );
-                    }
-                    // todo doing
-                })
-                return false;
-            }
-            document.onmouseup=function () {
-                var rect=file.querySelector(".rect");
-                if(rect){
-                    file.removeChild(rect);
-                }
-                document.onmousemove=document.onmouseup=null;
-
-            }
-        };
-
-
-    }*/
+    sort:function () {
+        /*if(handle.state.sort){
+            console.log("按字母顺序")
+        }else{
+            console.log("按时间顺序")
+        }*/
+    }
 }
