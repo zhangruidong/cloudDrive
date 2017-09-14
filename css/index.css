@@ -6,6 +6,7 @@ body {
 body {
   background-color: #6ea7b2;
   overflow: hidden;
+  position: relative;
 }
 #app {
   width: 1200px;
@@ -629,4 +630,26 @@ content {
   margin: 24px auto;
   font: 18px/26px "微软雅黑";
   text-align: center;
+}
+.menu {
+  display: none;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 90px;
+  font: 14px/24px "微软雅黑";
+  box-shadow: 0 0 4px black;
+  border-radius: 6px;
+  background-color: #f6f7fb;
+}
+.menu li {
+  padding-left: 18px;
+  cursor: pointer;
+}
+.menu li:hover {
+  background-color: #e1e8ee;
+}
+.menu li.active {
+  background-color: #f0f4f7;
 }

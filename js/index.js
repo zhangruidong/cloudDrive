@@ -6,11 +6,7 @@ handle.openTree();
 handle.showFile();
 handle.breadcrumb();
 handle.sort();
-var arrr=["张","锐","东"];
-arrr.sort(function (a,b) {
-    return a.localeCompare(b);
-});
-console.log(arrr);
+
 
 (function () {  // 文件 大小 图标显示
     var resize=document.querySelector("#tool .rightIcon");
@@ -29,30 +25,7 @@ console.log(arrr);
 })();
 (function () {
     var renameBtn=document.querySelector("#tool div:nth-of-type(4)");
-    renameBtn.onclick=function () {
-        var lis=document.querySelectorAll("#file .files li.active");
-        var mask=document.querySelector(".mask");
-        var alert=mask.querySelector(".alert");
-        var h2=alert.querySelector("h2");
-        var alert=mask.querySelector(".alert");
-        if(lis.length==0 || lis.length>1){
-            h2.innerHTML="请选择一个文件！";
-            mask.style.display="block";
-            alert.style.display="block";
-            var btnR=alert.querySelector("input");
-            var close=alert.querySelector(".close");
-            btnR.onclick=fnClose;
-            close.onclick=fnClose;
-            function fnClose() {
-                mask.style.display="none";
-                alert.style.display="none";
-            }
-        }else{
-            var inp=lis[0].querySelector("input");
-            inp.style.display="block";
-            inp.select();
-        }
-    }
+    renameBtn.onclick=handle.btnRename;
 })();
 (function () { // 新建文件
     var newBtn=document.querySelector("#tool div:nth-of-type(6)");
@@ -76,7 +49,7 @@ console.log(arrr);
 * 删除
 * */
 
-(function () {
+(function () {  //排序方式
     var tool=document.querySelector("#tool");
     var sort=tool.querySelector(".sort");
     var ul=tool.querySelector("ul");
@@ -104,3 +77,53 @@ console.log(arrr);
         }
     })
 })();
+
+/* 右键*/
+(function () {
+    var file=document.getElementById("file");
+    var files=file.querySelector(".files");
+    var minFiles=file.querySelector(".min-files");
+    var menu=document.querySelector(".menu");
+    var menus=menu.querySelectorAll("li");
+    var fileRect=file.getBoundingClientRect();
+    var w=90,h=136;
+    menus.forEach((item,index)=>{
+        item.addEventListener("mousedown",function () {
+            if(index==0){  // 打开
+                setTimeout(handle.btnOpen,100);
+            }
+            if(index==1){ // 新建
+                setTimeout(handle.newFile,100);
+            }
+            if(index==2){ // 删除
+                setTimeout(handle.removeFile,100);
+            }
+            if(index==3){ // 重命名
+                setTimeout(handle.btnRename,100);
+            }
+        })
+    })
+    file.oncontextmenu=function (e) {
+        menu.style.display="none";
+        var l=e.clientX,
+            t=e.clientY;
+        if(e.clientX>fileRect.right-w){
+            l=fileRect.right-w;
+        }
+        if(e.clientY>document.body.getBoundingClientRect().bottom-h){
+            t=document.documentElement.getBoundingClientRect().bottom-h;
+        }
+        menu.style.left=l+"px";
+        menu.style.top=t+"px";
+        menu.style.display="block";
+
+        return false;
+    }
+})();
+
+/*
+var arrr=["张","锐","东"];
+arrr.sort(function (a,b) {
+    return a.localeCompare(b);
+});
+console.log(arrr);*/

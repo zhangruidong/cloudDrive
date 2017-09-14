@@ -160,7 +160,9 @@ var handle = {
         if(arr.length==0){
             noFile.style.display="block";
             files.style.display="none";
+            files.innerHTML="";
             minFiles.style.display="none";
+            minFiles.innerHTML="";
         }else{
             if(handle.state.size){ //大图标
                 //todo 通过开关显示不同的文件类型
@@ -178,6 +180,7 @@ var handle = {
                 `
                 }
                 files.innerHTML=str;
+                minFiles.innerHTML="";
                 var lis=file.getElementsByTagName("li");
                 handle.filesAddEvent(lis);
             }else{
@@ -200,7 +203,8 @@ var handle = {
                 `
                 }
                 minFiles.innerHTML=str;
-                var lis=minFiles.getElementsByTagName("li");
+                files.innerHTML="";
+                var lis=minFiles.querySelectorAll("li.file");
                 handle.filesAddEvent(lis);
             };
         }
@@ -210,6 +214,8 @@ var handle = {
         document.onmousedown=function (e) {
             var box=lis[0].parentNode;
             var file=document.querySelector("#file");
+            var menu=document.querySelector(".menu");
+            menu.style.display="none"
             if(e.target==box){
                 filePos=file.getBoundingClientRect();
                 for (var i = 0; i < lis.length; i++) {
@@ -258,7 +264,7 @@ var handle = {
                     }
                     document.onmousemove=document.onmouseup=null;
                 }
-            }else if(e.target.classList.contains("active") || e.target.parentNode.classList.contains("active")){
+            }else if(e.button==0 && e.target.classList.contains("active") || e.target.parentNode.classList.contains("active")){
                 var selLi=box.querySelectorAll(".active");
                 var noselLi=box.querySelectorAll(".file:not(.active)");
                 var fileRect=file.getBoundingClientRect();
@@ -369,6 +375,8 @@ var handle = {
         e.stopPropagation();
         var inp=this.querySelector("input");
         var p=this.querySelector("p");
+        var menu=document.querySelector(".menu");
+        menu.style.display="none";
         var selLi=Array.from(lis).filter(function (item) {
             if(item.classList.contains("active")){
                 return true;
@@ -581,14 +589,13 @@ var handle = {
                     clearInterval(timer);
                     mask.style.display="none";
                     loading.style.display="none";
+                    handle.creatTree();
+                    handle.openTree();
+                    handle.showFile();
+                    handle.breadcrumb();
                 }
                 h2.innerHTML="正在删除"+now+"/"+removeArr.length;
             },200)
-
-            handle.creatTree();
-            handle.openTree();
-            handle.showFile();
-            handle.breadcrumb();
         }
 
     },
@@ -618,6 +625,43 @@ var handle = {
             }
         }
         return children;
+    },
+    btnRename:function () {
+        var lis=document.querySelectorAll("#file .files li.active");
+        var mask=document.querySelector(".mask");
+        var alert=mask.querySelector(".alert");
+        var h2=alert.querySelector("h2");
+        var alert=mask.querySelector(".alert");
+        if(lis.length==0 || lis.length>1){
+            h2.innerHTML="请选择一个文件！";
+            mask.style.display="block";
+            alert.style.display="block";
+            var btnR=alert.querySelector("input");
+            var close=alert.querySelector(".close");
+            btnR.onclick=fnClose;
+            close.onclick=fnClose;
+            function fnClose() {
+                mask.style.display="none";
+                alert.style.display="none";
+            }
+        }else{
+            var inp=lis[0].querySelector("input");
+            inp.style.display="block";
+            inp.select();
+        }
+    },
+    btnOpen:function () {
+        var file=document.getElementById("file");
+        selLi=file.querySelectorAll("li.active");
+        if(selLi.length==1){
+            var pid=Number(selLi[0].getAttribute("data-id"));
+            handle.state.nowPid=pid;
+            var d=handle.getByPid(pid);
+            handle.showFile();
+            handle.breadcrumb();
+            handle.creatTree();
+            handle.openTree();
+        }
     },
     sort:function () {
         /*if(handle.state.sort){
